@@ -17,12 +17,16 @@ JAR_BOTTOM = JAR_TOP + JAR_HEIGHT
 
 # Fruit definitions: (radius, color, weight)
 FRUITS = [
-    (20, (255, 0, 0), 1),    # Cherry
-    (28, (255, 128, 0), 2),  # Strawberry
-    (36, (255, 255, 0), 3),  # Lemon
-    (44, (0, 255, 0), 5),    # Apple
-    (52, (0, 255, 255), 8),  # Melon
-    (60, (255, 0, 255), 13), # Watermelon
+    (10, (220, 0, 0), 1),        # Cherry (red, tiny)
+    (11, (255, 80, 80), 2),      # Strawberry (lighter red, small)
+    (22, (160, 60, 200), 3),     # Grape (purple, small)
+    (23, (255, 220, 60), 4),     # Dekopon (yellow, small)
+    (28, (255, 140, 0), 6),      # Persimmon (orange, medium)
+    (34, (200, 0, 0), 8),        # Apple (red, medium)
+    (44, (255, 170, 200), 11),   # Peach (pink, large)
+    (50, (255, 230, 80), 14),    # Pineapple (yellow, large)
+    (55, (60, 200, 60), 18),     # Melon (green, large)
+    (65, (20, 80, 40), 25),      # Watermelon (dark green, very large)
 ]
 
 clock = pygame.time.Clock()
@@ -140,8 +144,9 @@ def is_supported(fruit, fruits):
 
 fruits = []
 # When spawning a new fruit, drop it above the jar
-current_fruit = Fruit(0, JAR_LEFT + JAR_WIDTH // 2, JAR_TOP - 40)
-next_kind = random.randint(0, 2)
+next_kind = random.randint(0, 4)
+current_kind = random.randint(0, 4)
+current_fruit = Fruit(current_kind, JAR_LEFT + JAR_WIDTH // 2, JAR_TOP - 40)
 game_over = False
 score = 0
 drop_cooldown = 3000  # milliseconds (6 seconds)
@@ -164,11 +169,10 @@ while not game_over:
                 now = pygame.time.get_ticks()
                 if now - last_drop_time >= drop_cooldown:
                     fruits.append(current_fruit)
-                    # Add a small random vx to the new fruit
                     vx = random.uniform(-2, 2)
                     current_fruit = Fruit(next_kind, JAR_LEFT + JAR_WIDTH // 2, JAR_TOP - 40)
                     current_fruit.vx = vx
-                    next_kind = random.randint(0, 2)
+                    next_kind = random.randint(0, 4)  # Only allow cherry to persimmon
                     last_drop_time = now
 
     # --- MERGE LOGIC ---
