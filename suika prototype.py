@@ -21,12 +21,12 @@ FRUITS = [
     (11, (255, 80, 80), 2),      # Strawberry (lighter red, tiny)
     (22, (160, 60, 200), 3),     # Grape (purple, small)
     (23, (255, 220, 60), 4),     # Dekopon (yellow, small)
-    (28, (255, 140, 0), 6),      # Persimmon (orange, medium)
-    (34, (200, 0, 0), 8),        # Apple (red, medium)
-    (44, (255, 170, 200), 11),   # Peach (pink, large)
-    (50, (255, 230, 80), 14),    # Pineapple (yellow, large)
-    (55, (60, 200, 60), 18),     # Melon (green, very large)
-    (65, (20, 80, 40), 25),      # Watermelon (dark green, M A S S I V E)
+    (34, (255, 140, 0), 6),      # Persimmon (orange, medium)
+    (44, (200, 0, 0), 8),        # Apple (red, medium)
+    (60, (255, 170, 200), 11),   # Peach (pink, large)
+    (70, (255, 230, 80), 14),    # Pineapple (yellow, large)
+    (80, (60, 200, 60), 18),     # Melon (green, very large)
+    (100, (20, 80, 40), 25),      # Watermelon (dark green, M A S S I V E)
 ]
 
 clock = pygame.time.Clock()
