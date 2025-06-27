@@ -1,6 +1,8 @@
 import pygame
 import random
 import math
+import csv
+import os
 
 pygame.init()
 WIDTH, HEIGHT = 600, 800
@@ -120,9 +122,10 @@ def resolve_collision(f1, f2):
 
 
 def merge(f1, f2):
-    # Allow merges based solely on proximity and type
+    # If not the last fruit, merge up as normal
     if f1.kind < len(FRUITS) - 1:
         return Fruit(f1.kind + 1, (f1.x + f2.x) / 2, (f1.y + f2.y) / 2)
+    # If both are watermelons, merging returns nothing (they disappear)
     return None
 
 def collide(f1, f2):
@@ -141,6 +144,26 @@ def is_supported(fruit, fruits):
             return True
     return False
 
+LEADERBOARD_FILE = "leaderboard.csv"
+
+def load_leaderboard():
+    if not os.path.exists(LEADERBOARD_FILE):
+        return []
+    with open(LEADERBOARD_FILE, newline='') as f:
+        reader = csv.reader(f)
+        return [(row[0], int(row[1])) for row in reader]
+
+def save_score(name, score):
+    scores = load_leaderboard()
+    scores.append((name, score))
+    # Sort descending by score
+    scores.sort(key=lambda x: x[1], reverse=True)
+    # Save back
+    with open(LEADERBOARD_FILE, "w", newline='') as f:
+        writer = csv.writer(f)
+        for entry in scores:
+            writer.writerow(entry)
+    return scores
 
 fruits = []
 # When spawning a new fruit, drop it above the jar
@@ -293,12 +316,36 @@ while not game_over:
     pygame.display.flip()
     clock.tick(60)
 
-# Game Over screen
+
+# Prompt for player name (simple input box)
+import tkinter as tk
+from tkinter import simpledialog
+root = tk.Tk()
+root.withdraw()
+player_name = simpledialog.askstring("Name", "Enter your name for the leaderboard:")
+if not player_name:
+    player_name = "Anonymous"
+root.destroy()
+scores = save_score(player_name, score)
+# Find player's rank
+rank = [i+1 for i, entry in enumerate(scores) if entry[0] == player_name and entry[1] == score][0]
+top10 = scores[:10]
+# Game Over screen with leaderboard
 screen.fill((30, 30, 30))
 msg = big_font.render("Game Over!", True, (255, 80, 80))
 score_msg = font.render(f"Final Score: {score}", True, (255, 255, 0))
-screen.blit(msg, (WIDTH // 2 - msg.get_width() // 2, HEIGHT // 2 - msg.get_height()))
-screen.blit(score_msg, (WIDTH // 2 - score_msg.get_width() // 2, HEIGHT // 2 + 10))
+rank_msg = font.render(f"Your Rank: {rank}", True, (0, 255, 255))
+screen.blit(msg, (WIDTH // 2 - msg.get_width() // 2, 60))
+screen.blit(score_msg, (WIDTH // 2 - score_msg.get_width() // 2, 120))
+screen.blit(rank_msg, (WIDTH // 2 - rank_msg.get_width() // 2, 160))
+
+# Draw leaderboard
+lb_title = font.render("Leaderboard (Top 10)", True, (255, 255, 255))
+screen.blit(lb_title, (WIDTH // 2 - lb_title.get_width() // 2, 220))
+for i, entry in enumerate(top10):
+    entry_msg = font.render(f"{i+1}. {entry[0]} - {entry[1]}", True, (255, 255, 255))
+    screen.blit(entry_msg, (WIDTH // 2 - entry_msg.get_width() // 2, 260 + i * 30))
+
 pygame.display.flip()
-pygame.time.wait(2500)
+pygame.time.wait(5000)
 pygame.quit()
