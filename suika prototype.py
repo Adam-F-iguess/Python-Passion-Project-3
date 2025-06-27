@@ -172,7 +172,7 @@ current_kind = random.randint(0, 4)
 current_fruit = Fruit(current_kind, JAR_LEFT + JAR_WIDTH // 2, JAR_TOP - 40)
 game_over = False
 score = 0
-drop_cooldown = 3000  # milliseconds (6 seconds)
+drop_cooldown = 2000  # milliseconds (1 seconds)
 last_drop_time = pygame.time.get_ticks() - drop_cooldown  # allow immediate first drop
 
 while not game_over:
